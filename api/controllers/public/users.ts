@@ -1,27 +1,36 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
-import { getDataSource } from '../../models'
+import { dataSource } from '../../models'
 import { User } from '../../models/entities/User'
 import { emailService } from '../../services/email'
 import { errors } from '../../utils/constants'
-import { IUserPostBody, IUserState } from '../../utils/interfaces/user'
+import { IUserPost, IUserPostBody, IUserState, UserStatus } from '../../utils/interfaces/user'
 import { createEmailVerificationJwt, createJwt, emailVerificationJwtSecret } from '../../utils/jwt'
+import bcrypt from 'bcrypt'
 
-const userRepository = getDataSource()
-    .getRepository(User)
-    .extend({
-        activateUser(id: number) {
-            return this.update(
-                { id },
-                {
-                    active: true
-                }
-            )
-        }
-    })
+const userRepository = dataSource.getRepository(User).extend({
+    activateUser(id: number) {
+        return this.update(
+            { id },
+            {
+                active: true
+            }
+        )
+    }
+})
 
 async function postUser(req: FastifyRequest<{ Body: IUserPostBody }>, reply: FastifyReply) {
-    const user = await userRepository.save(req.body)
+    const hashedPassword: string = await bcrypt.hash(req.body.password, 10)
+
+    const userObj: IUserPost = {
+        username: req.body.username,
+        email: req.body.email,
+        password: hashedPassword,
+        status: UserStatus.PLAYER,
+        active: false
+    }
+
+    const user = await userRepository.save(userObj)
 
     const userState: IUserState = {
         id: user.id,

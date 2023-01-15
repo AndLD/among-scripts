@@ -25,19 +25,20 @@ export async function isAuthorized(req: FastifyRequest, reply: FastifyReply, nex
     next()
 }
 
-export function isSocketAuthorized(req: any, fn: (err: string | null | undefined, success: boolean) => void) {
+export function isSocketAllowed(req: any, fn: (err: string | null | undefined, success: boolean) => void) {
     if (!req.headers.authorization) {
         return fn(errors.AUTHORIZATION_HEADER_EMPTY.msg, false)
     }
 
     try {
         const token: string = req.headers.authorization?.split(' ')[1] as string
+
         var decodeValue = jwt.verify(token, accessJwtSecret) as { user: IUserState }
     } catch (e) {
         return fn(errors.JWT_INVALID.msg, false)
     }
 
-    fn(null, !!decodeValue?.user)
+    fn(null, !!decodeValue?.user.active)
 }
 
 export function isActive(req: FastifyRequest, reply: FastifyReply, next: NextFunction) {

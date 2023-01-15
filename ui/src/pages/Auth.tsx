@@ -1,15 +1,14 @@
 import { Button } from 'antd'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import SigninForm from '../components/Auth/SigninForm'
 import SignupModal from '../components/Auth/SignupModal'
+import { useTitle } from '../hooks/pages/layout'
 import '../styles/Auth.scss'
 
 export default function Auth() {
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
+    useTitle('Among Scripts Auth')
 
-    useEffect(() => {
-        document.title = 'Auth'
-    }, [])
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
 
     function SignupBtn() {
         return (

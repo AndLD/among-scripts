@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
-import { getDataSource } from '../../models'
+import { dataSource } from '../../models'
 import { User } from '../../models/entities/User'
 import { errors } from '../../utils/constants'
 import { IAuthPostBody } from '../../utils/interfaces/auth'
@@ -14,7 +14,7 @@ interface IRefreshJwtPayload extends jwt.JwtPayload {
     }
 }
 
-const userRepository = getDataSource().getRepository(User)
+const userRepository = dataSource.getRepository(User)
 
 async function postLogin(req: FastifyRequest<{ Body: IAuthPostBody }>, reply: FastifyReply) {
     const body = req.body
