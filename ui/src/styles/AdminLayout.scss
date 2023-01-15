@@ -1,0 +1,36 @@
+.trigger {
+    padding-left: 24px;
+    font-size: 32px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.trigger:hover,
+.blue-color-on-hover:hover {
+    color: #1890ff;
+    transition: color 0.3s;
+}
+
+.logo {
+    min-height: 50px;
+    text-align: center;
+    margin: 16px;
+    color: white;
+    font-size: 17px;
+    img {
+        min-width: 50px;
+        width: 50%;
+        cursor: pointer;
+        transition: all ease 0.3s;
+    }
+}
+
+.site-layout {
+    background: rgb(220, 220, 220);
+}
+
+.site-layout-background {
+    background: #fff;
+    padding: 0;
+    background-size: cover;
+}

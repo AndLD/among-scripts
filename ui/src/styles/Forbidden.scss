@@ -1,0 +1,30 @@
+.forbidden-container {
+    background-color: #050044;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    text-align: center;
+
+    color: white;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .title {
+        font-size: 10vw;
+    }
+
+    .title,
+    .forbidden-content {
+        z-index: 1;
+    }
+
+    .forbidden-content {
+        .message {
+            max-width: 70%;
+            font-size: 2vw;
+            margin: auto;
+        }
+    }
+}
