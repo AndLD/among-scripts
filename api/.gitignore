@@ -1,1 +1,3 @@
+ts-built
+.env*
 node_modules

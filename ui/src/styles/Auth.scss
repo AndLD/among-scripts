@@ -1,0 +1,82 @@
+.auth-container {
+    background-color: #050044;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+
+    .service-number {
+        position: absolute;
+        top: -15%;
+        left: -5%;
+        text-align: right;
+        line-height: 0.8;
+
+        font-style: normal;
+        font-size: 35vw;
+        user-select: none;
+
+        color: rgba(255, 255, 255, 0.19);
+    }
+    .all-group {
+        margin: 5% 20% 0 20%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: row;
+            z-index: 1;
+            flex: 1;
+            gap: 10%;
+            .page-title {
+                flex: 1;
+                .title {
+                    font-weight: 700;
+                    font-size: 6.25vw;
+                    line-height: 13.4vh;
+
+                    color: #ffffff;
+                }
+                .sub-title {
+                    font-weight: 400;
+                    font-size: 2.1vw;
+                    line-height: 5vh;
+
+                    color: #ffffff;
+                }
+            }
+            .page-form {
+                flex: 1;
+                .auth-form {
+                    margin: auto;
+                    width: 80%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    .buttons-style {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-between;
+                        gap: 5%;
+                        .button {
+                            flex: 1;
+                        }
+                    }
+                }
+            }
+        }
+        .page-icons {
+            display: flex;
+            margin: 5%;
+            justify-content: space-between;
+            .icon {
+                width: 11vw;
+                height: 11vw;
+                z-index: 1;
+            }
+        }
+    }
+}

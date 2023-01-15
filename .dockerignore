@@ -1,0 +1,8 @@
+ui/node_modules
+ui/.circleci
+ui/.vscode
+ui/.idea
+ui/.git
+ui/.gitignore
+ui/Dockerfile
+ui/README.md

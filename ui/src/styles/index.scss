@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+}
+
+.action-constrols {
+    padding: 0 !important;
+
+    .ant-dropdown-menu-item {
+        padding: 0 !important;
+        margin: 0 !important;
+        line-height: 0 !important;
+    }
+}
+
+.auth-container,
+.forbidden-container {
+    .ellipse {
+        position: absolute;
+        width: 100.6vw;
+        height: 100.6vw;
+        left: 10.9vw;
+        top: -12.8vh;
+        border-radius: 50%;
+        background: radial-gradient(49.97% 49.97% at 50% 50.03%, #1400ff 0%, #070058 100%, #070058 100%);
+        mix-blend-mode: normal;
+        z-index: 0;
+    }
+}
