@@ -1,13 +1,24 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 import { getDataSource } from '../../models'
-import { UserRepository } from '../../models/repositories/UserRepository'
+import { User } from '../../models/entities/User'
 import { emailService } from '../../services/email'
 import { errors } from '../../utils/constants'
 import { IUserPostBody, IUserState } from '../../utils/interfaces/user'
 import { createEmailVerificationJwt, createJwt, emailVerificationJwtSecret } from '../../utils/jwt'
 
-const userRepository = getDataSource().getCustomRepository(UserRepository)
+const userRepository = getDataSource()
+    .getRepository(User)
+    .extend({
+        activateUser(id: number) {
+            return this.update(
+                { id },
+                {
+                    active: true
+                }
+            )
+        }
+    })
 
 async function postUser(req: FastifyRequest<{ Body: IUserPostBody }>, reply: FastifyReply) {
     const user = await userRepository.save(req.body)
@@ -58,7 +69,7 @@ async function getVerifyEmail(req: FastifyRequest<{ Querystring: IGetVerifyEmail
             throw errors.DOC_NOT_FOUND
         }
 
-        reply.status(200)
+        reply.status(200).send()
     } catch (e) {
         throw errors.JWT_INVALID
     }

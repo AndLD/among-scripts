@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
-import { IUser, UserStatus } from '../utils/interfaces/user'
+import { IUser, UserStatus } from '../../utils/interfaces/user'
 import { Base } from './Base'
 import { Bot } from './Bot'
 import { Command } from './Command'

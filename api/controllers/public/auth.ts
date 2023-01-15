@@ -100,7 +100,7 @@ async function postRefresh(req: FastifyRequest, reply: FastifyReply) {
 
 async function postLogout(req: FastifyRequest, reply: FastifyReply) {
     reply.clearCookie('refresh_token')
-    reply.status(200)
+    reply.status(200).send()
 }
 
 export const authPublicControllers = {

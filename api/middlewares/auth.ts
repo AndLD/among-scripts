@@ -1,9 +1,11 @@
-import { FastifyReply } from 'fastify/types/reply'
+import { NextFunction } from '@fastify/middie'
+import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 import { errors } from '../utils/constants'
+import { IUserState } from '../utils/interfaces/user'
 import { accessJwtSecret } from '../utils/jwt'
 
-export async function isAuthorized(req: any, res: FastifyReply, next: any) {
+export async function isAuthorized(req: FastifyRequest, reply: FastifyReply, next: NextFunction) {
     if (!req.headers.authorization) {
         throw errors.AUTHORIZATION_HEADER_EMPTY
     }
@@ -11,11 +13,11 @@ export async function isAuthorized(req: any, res: FastifyReply, next: any) {
     const token: string = req.headers.authorization.split(' ')[1] as string
 
     try {
-        const decodeValue: any = jwt.verify(token, accessJwtSecret)
+        const decodeValue = jwt.verify(token, accessJwtSecret) as { user: IUserState }
 
         // TODO: Validate decodeValue ?
 
-        req.user = decodeValue.user
+        req.requestContext.set('user', decodeValue.user)
     } catch (e) {
         throw errors.JWT_INVALID
     }
@@ -23,40 +25,55 @@ export async function isAuthorized(req: any, res: FastifyReply, next: any) {
     next()
 }
 
-export function isActive(req: any, reply: FastifyReply, next: any) {
-    const active = req.user?.active
+export function isSocketAuthorized(req: any, fn: (err: string | null | undefined, success: boolean) => void) {
+    if (!req.headers.authorization) {
+        return fn(errors.AUTHORIZATION_HEADER_EMPTY.msg, false)
+    }
+
+    try {
+        const token: string = req.headers.authorization?.split(' ')[1] as string
+        var decodeValue = jwt.verify(token, accessJwtSecret) as { user: IUserState }
+    } catch (e) {
+        return fn(errors.JWT_INVALID.msg, false)
+    }
+
+    fn(null, !!decodeValue?.user)
+}
+
+export function isActive(req: FastifyRequest, reply: FastifyReply, next: NextFunction) {
+    const active = req.requestContext.get('user')?.active
 
     if (active) {
         return next()
     }
 
-    reply.status(403)
+    reply.status(403).send()
 }
 
-export function hasUserStatus(req: any, reply: FastifyReply, next: any) {
-    const status = req.user?.status
+export function hasUserStatus(req: FastifyRequest, reply: FastifyReply, next: NextFunction) {
+    const status = req.requestContext.get('user')?.status
 
     if (!status) {
-        return reply.status(500)
+        return reply.status(500).send()
     }
 
     if (status === 'admin' || status == 'user') {
         return next()
     }
 
-    return reply.status(403)
+    reply.status(403).send()
 }
 
-export function hasAdminStatus(req: any, reply: FastifyReply, next: any) {
-    const status = req.user?.status
+export function hasAdminStatus(req: FastifyRequest, reply: FastifyReply, next: NextFunction) {
+    const status = req.requestContext.get('user')?.status
 
     if (!status) {
-        return reply.status(500)
+        return reply.status(500).send()
     }
 
     if (status === 'admin') {
         return next()
     }
 
-    return reply.status(403)
+    reply.status(403).send()
 }

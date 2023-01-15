@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
-import { CommandStatus, CommandType, ICommand } from '../utils/interfaces/command'
+import { CommandStatus, CommandType, ICommand } from '../../utils/interfaces/command'
 import { User } from './User'
 
 @Entity()

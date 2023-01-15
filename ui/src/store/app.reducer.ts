@@ -1,11 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { Socket } from 'socket.io-client'
 
 interface IState {
     token: string | null
+    socket: Socket | null
 }
 
 const initialState: IState = {
-    token: localStorage.getItem('token')
+    token: localStorage.getItem('token'),
+    socket: null
 }
 
 export const appSlice = createSlice({
@@ -19,6 +22,9 @@ export const appSlice = createSlice({
             } else {
                 localStorage.removeItem('token')
             }
+        },
+        setSocket(state, action: PayloadAction<Socket | null>) {
+            state.socket = action.payload as any
         }
     }
 })
