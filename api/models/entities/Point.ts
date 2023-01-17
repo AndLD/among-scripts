@@ -15,7 +15,7 @@ export class Point {
     x: number
 
     @Column()
-    y: string
+    y: number
 
     @Column({ name: 'resource_id' })
     resourceId?: number

@@ -24,15 +24,19 @@
         "fastify": "^4.11.0",
         "fastify-socket.io": "^4.0.0",
         "jsonwebtoken": "^9.0.0",
+        "lodash": "^4.17.21",
         "nodemailer": "^6.9.0",
         "pg": "^8.8.0",
         "reflect-metadata": "^0.1.13",
-        "typeorm": "^0.3.11"
+        "typeorm": "^0.3.11",
+        "typeorm-naming-strategies": "^4.1.0"
     },
     "devDependencies": {
         "@types/bcrypt": "^5.0.0",
         "@types/jest": "^29.2.5",
         "@types/jsonwebtoken": "^9.0.1",
+        "@types/lodash": "^4.14.191",
+        "@types/node": "^18.11.18",
         "@types/nodemailer": "^6.4.7",
         "@types/supertest": "^2.0.12",
         "env-cmd": "^10.1.0",

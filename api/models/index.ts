@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 import { Base } from './entities/Base'
 import { Bot } from './entities/Bot'
 import { Command } from './entities/Command'
@@ -15,5 +16,7 @@ export const dataSource = new DataSource({
     username: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
     database: process.env.POSTGRES_DB,
+    logging: true,
+    namingStrategy: new SnakeNamingStrategy(),
     entities: [User, Point, Resource, Base, Bot, Command]
 })

@@ -25,10 +25,10 @@ export class User implements IUser {
     active: boolean
 
     @Column()
-    timestamp: number
+    timestamp: string
 
     @Column({ name: 'last_update_timestamp' })
-    lastUpdateTimestamp?: number
+    lastUpdateTimestamp?: string
 
     @OneToMany(() => Base, (base) => base.userId)
     bases: Base[]

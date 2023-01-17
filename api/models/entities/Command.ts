@@ -17,10 +17,10 @@ export class Command implements ICommand {
     status: CommandStatus
 
     @Column()
-    timestamp: number
+    timestamp: string
 
     @Column({ name: 'last_update_timestamp' })
-    lastUpdateTimestamp?: number
+    lastUpdateTimestamp?: string
 
     @ManyToOne(() => User, (user) => user.commands)
     user: User

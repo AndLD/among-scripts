@@ -1,21 +1,26 @@
+import bcrypt from 'bcrypt'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
+import _ from 'lodash'
 import { dataSource } from '../../models'
+import { Base } from '../../models/entities/Base'
+import { Point } from '../../models/entities/Point'
 import { User } from '../../models/entities/User'
 import { emailService } from '../../services/email'
-import { errors } from '../../utils/constants'
+import { errors, INITIAL_BASE_STORAGE } from '../../utils/constants'
 import { IUserPost, IUserPostBody, IUserState, UserStatus } from '../../utils/interfaces/user'
 import { createEmailVerificationJwt, createJwt, emailVerificationJwtSecret } from '../../utils/jwt'
-import bcrypt from 'bcrypt'
 
 const userRepository = dataSource.getRepository(User).extend({
     activateUser(id: number) {
-        return this.update(
-            { id },
-            {
+        return this.createQueryBuilder()
+            .update(User, {
                 active: true
-            }
-        )
+            })
+            .where('id = :id', { id })
+            .returning('*')
+            .updateEntity(true)
+            .execute()
     }
 })
 
@@ -73,10 +78,30 @@ async function getVerifyEmail(req: FastifyRequest<{ Querystring: IGetVerifyEmail
 
         const userId = decodeValue.user.id
 
-        const updatedUser = await userRepository.activateUser(userId)
-        if (!updatedUser.raw) {
+        const updatedUserResult = await userRepository.activateUser(userId)
+        const updatedUser = updatedUserResult.raw[0]
+
+        if (!updatedUser) {
             throw errors.DOC_NOT_FOUND
         }
+
+        await dataSource.transaction(async (transactionalEntityManager) => {
+            const base = new Base()
+
+            base.storage = INITIAL_BASE_STORAGE
+            base.userId = userId
+
+            const savedBase = await transactionalEntityManager.save(base)
+
+            const point = new Point()
+
+            point.x = _.random(-1000, 1000)
+            point.y = _.random(-1000, 1000)
+            point.userId = userId
+            point.baseId = savedBase.id
+
+            await transactionalEntityManager.save(point)
+        })
 
         reply.status(200).send()
     } catch (e) {

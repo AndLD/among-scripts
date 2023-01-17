@@ -7,7 +7,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     status user_status NOT NULL,
     active BOOLEAN NOT NULL,
-    timestamp timestamp NOT NULL,
+    timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update_timestamp timestamp
 );
 
@@ -16,16 +16,6 @@ RETURNS trigger AS
 $$
     BEGIN
         INSERT INTO maps(user_id) VALUES(NEW.id);
-        RETURN NEW;
-    END;
-$$
-LANGUAGE 'plpgsql';
-
-CREATE OR REPLACE FUNCTION tr_insert_fnc()
-RETURNS trigger AS
-$$
-    BEGIN
-        NEW.timestamp = now();
         RETURN NEW;
     END;
 $$
@@ -40,11 +30,6 @@ $$
     END;
 $$
 LANGUAGE 'plpgsql';
-
-CREATE TRIGGER tr_users_insert
-BEFORE INSERT ON users
-FOR EACH ROW
-EXECUTE FUNCTION tr_insert_fnc();
 
 CREATE TRIGGER tr_users_update
 BEFORE UPDATE ON users
@@ -80,32 +65,82 @@ CREATE TABLE points (
     UNIQUE (x, y)
 );
 
-CREATE OR REPLACE FUNCTION tr_points_update_fnc()
+-- CREATE OR REPLACE FUNCTION tr_points_update_fnc()
+-- RETURNS trigger AS
+-- $$
+--     BEGIN
+--         IF ( UPDATE (resource_id) ) THEN
+--             NEW.base_id = NULL;
+--             NEW.bot_id = NULL;
+--         ELSIF ( UPDATE (base_id) ) THEN
+--             NEW.resource_id = NULL;
+--             NEW.bot_id = NULL;
+--         ELSIF ( UPDATE (bot_id) ) THEN
+--             NEW.base_id = NULL;
+--             NEW.resource_id = NULL;
+--         END IF;
+
+--         RETURN NEW;
+--     END;
+-- $$
+-- LANGUAGE 'plpgsql';
+
+-- CREATE TRIGGER tr_points_update
+-- BEFORE UPDATE ON points
+-- FOR EACH ROW
+-- EXECUTE FUNCTION tr_points_update_fnc();
+
+CREATE OR REPLACE FUNCTION tr_points_update_resource_id_fnc()
 RETURNS trigger AS
 $$
     BEGIN
-        IF ( UPDATE (resource_id) ) THEN
-            NEW.base_id = NULL;
-            NEW.bot_id = NULL;
-        ELSIF ( UPDATE (base_id) ) THEN
-            NEW.resource_id = NULL;
-            NEW.bot_id = NULL;
-        END IF;
-
-        IF ( UPDATE (bot_id) ) THEN
-            NEW.base_id = NULL;
-            NEW.resource_id = NULL;
-        END IF;
+        NEW.base_id = NULL;
+        NEW.bot_id = NULL;
 
         RETURN NEW;
     END;
 $$
 LANGUAGE 'plpgsql';
 
-CREATE TRIGGER tr_points_update
-BEFORE UPDATE ON points
+CREATE OR REPLACE FUNCTION tr_points_update_base_id_fnc()
+RETURNS trigger AS
+$$
+    BEGIN
+        NEW.resource_id = NULL;
+        NEW.bot_id = NULL;
+
+        RETURN NEW;
+    END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION tr_points_update_bot_id_fnc()
+RETURNS trigger AS
+$$
+    BEGIN
+
+        NEW.base_id = NULL;
+        NEW.resource_id = NULL;
+
+        RETURN NEW;
+    END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE TRIGGER tr_points_update_resource_id
+BEFORE UPDATE OF resource_id ON points
 FOR EACH ROW
-EXECUTE FUNCTION tr_points_update_fnc();
+EXECUTE FUNCTION tr_points_update_resource_id_fnc();
+
+CREATE TRIGGER tr_points_update_base_id
+BEFORE UPDATE OF base_id ON points
+FOR EACH ROW
+EXECUTE FUNCTION tr_points_update_base_id_fnc();
+
+CREATE TRIGGER tr_points_update_bot_id
+BEFORE UPDATE OF bot_id ON points
+FOR EACH ROW
+EXECUTE FUNCTION tr_points_update_bot_id_fnc();
 
 CREATE TYPE command_status AS ENUM('created', 'in_process', 'completed');
 
@@ -114,14 +149,9 @@ CREATE TABLE commands (
     user_id INTEGER REFERENCES users ON DELETE CASCADE,
     type VARCHAR(30) NOT NULL,
     status command_status NOT NULL,
-    timestamp timestamp NOT NULL,
+    timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_update_timestamp timestamp
 );
-
-CREATE TRIGGER tr_commands_insert
-BEFORE INSERT ON commands
-FOR EACH ROW
-EXECUTE FUNCTION tr_insert_fnc();
 
 CREATE TRIGGER tr_commands_update
 BEFORE UPDATE ON commands

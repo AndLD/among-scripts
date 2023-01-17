@@ -3,8 +3,8 @@ export interface ICommand {
     userId: number
     type: CommandType
     status: CommandStatus
-    timestamp: number
-    lastUpdateTimestamp?: number
+    timestamp: string
+    lastUpdateTimestamp?: string
 }
 
 export enum BaseCommands {

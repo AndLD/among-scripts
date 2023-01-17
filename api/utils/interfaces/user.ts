@@ -5,8 +5,8 @@ export interface IUser {
     password: string
     status: UserStatus
     active: boolean
-    timestamp: number
-    lastUpdateTimestamp?: number
+    timestamp: string
+    lastUpdateTimestamp?: string
 }
 
 export interface IUserInfo {
@@ -15,8 +15,8 @@ export interface IUserInfo {
     email: string
     status: UserStatus
     active: boolean
-    timestamp: number
-    lastUpdateTimestamp?: number
+    timestamp: string
+    lastUpdateTimestamp?: string
 }
 
 export interface IUserState {
@@ -25,8 +25,8 @@ export interface IUserState {
     email: string
     status: UserStatus
     active: boolean
-    timestamp: number
-    lastUpdateTimestamp?: number
+    timestamp: string
+    lastUpdateTimestamp?: string
 }
 
 export interface IUserPost {
