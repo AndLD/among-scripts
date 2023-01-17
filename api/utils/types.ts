@@ -1,1 +1,8 @@
-export type Table = 'users' | 'resources' | 'bases' | 'bots' | 'points' | 'commands'
+export enum Table {
+    USERS = 'users',
+    RESOURCES = 'resources',
+    BASES = 'bases',
+    BOTS = 'bots',
+    POINTS = 'points',
+    COMMANDS = 'commands'
+}

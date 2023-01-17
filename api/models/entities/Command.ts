@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { CommandStatus, CommandType, ICommand } from '../../utils/interfaces/command'
 import { User } from './User'
 
-@Entity()
+@Entity({ name: 'commands' })
 export class Command implements ICommand {
     @PrimaryGeneratedColumn()
     id: number

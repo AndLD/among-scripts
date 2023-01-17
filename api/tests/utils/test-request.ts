@@ -1,7 +1,7 @@
+import { HTTPMethods } from 'fastify'
 import supertest, { Response } from 'supertest'
-import { Any, HttpMethod } from '../../utils/types'
 
-const host = process.env.HOST || 'localhost'
+const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 8080
 const url = `http://${host}:${port}`
 
@@ -14,16 +14,16 @@ export async function testRequest(
         id,
         query,
         body,
-        resBody,
+        resBody: resBody,
         resCode = 200,
         auth
     }: {
-        method?: HttpMethod
+        method?: HTTPMethods
         route: string
         id?: string | number
         query?: { [key: string]: string }
-        body?: Any
-        resBody?: Any
+        body?: any
+        resBody?: any
         resCode?: number
         auth?: string
     },
@@ -37,7 +37,7 @@ export async function testRequest(
             : ''
     }`
 
-    const res: supertest.Response = await server[method.toLowerCase()](url)
+    const res: Response = await server[method.toLowerCase()](url)
         .set('Accept', /json/)
         .set('Authorization', auth ? auth : null)
         .send(body)

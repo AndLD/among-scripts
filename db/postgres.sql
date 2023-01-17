@@ -65,31 +65,6 @@ CREATE TABLE points (
     UNIQUE (x, y)
 );
 
--- CREATE OR REPLACE FUNCTION tr_points_update_fnc()
--- RETURNS trigger AS
--- $$
---     BEGIN
---         IF ( UPDATE (resource_id) ) THEN
---             NEW.base_id = NULL;
---             NEW.bot_id = NULL;
---         ELSIF ( UPDATE (base_id) ) THEN
---             NEW.resource_id = NULL;
---             NEW.bot_id = NULL;
---         ELSIF ( UPDATE (bot_id) ) THEN
---             NEW.base_id = NULL;
---             NEW.resource_id = NULL;
---         END IF;
-
---         RETURN NEW;
---     END;
--- $$
--- LANGUAGE 'plpgsql';
-
--- CREATE TRIGGER tr_points_update
--- BEFORE UPDATE ON points
--- FOR EACH ROW
--- EXECUTE FUNCTION tr_points_update_fnc();
-
 CREATE OR REPLACE FUNCTION tr_points_update_resource_id_fnc()
 RETURNS trigger AS
 $$

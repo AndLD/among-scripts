@@ -5,24 +5,11 @@ import _ from 'lodash'
 import { dataSource } from '../../models'
 import { Base } from '../../models/entities/Base'
 import { Point } from '../../models/entities/Point'
-import { User } from '../../models/entities/User'
+import { repositories } from '../../models/repositories'
 import { emailService } from '../../services/email'
 import { errors, INITIAL_BASE_STORAGE } from '../../utils/constants'
 import { IUserPost, IUserPostBody, IUserState, UserStatus } from '../../utils/interfaces/user'
 import { createEmailVerificationJwt, createJwt, emailVerificationJwtSecret } from '../../utils/jwt'
-
-const userRepository = dataSource.getRepository(User).extend({
-    activateUser(id: number) {
-        return this.createQueryBuilder()
-            .update(User, {
-                active: true
-            })
-            .where('id = :id', { id })
-            .returning('*')
-            .updateEntity(true)
-            .execute()
-    }
-})
 
 async function postUser(req: FastifyRequest<{ Body: IUserPostBody }>, reply: FastifyReply) {
     const hashedPassword: string = await bcrypt.hash(req.body.password, 10)
@@ -35,7 +22,7 @@ async function postUser(req: FastifyRequest<{ Body: IUserPostBody }>, reply: Fas
         active: false
     }
 
-    const user = await userRepository.save(userObj)
+    const user = await repositories.users.save(userObj)
 
     const userState: IUserState = {
         id: user.id,
@@ -78,7 +65,7 @@ async function getVerifyEmail(req: FastifyRequest<{ Querystring: IGetVerifyEmail
 
         const userId = decodeValue.user.id
 
-        const updatedUserResult = await userRepository.activateUser(userId)
+        const updatedUserResult = await repositories.users.activateUser(userId)
         const updatedUser = updatedUserResult.raw[0]
 
         if (!updatedUser) {

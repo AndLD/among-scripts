@@ -1,16 +1,18 @@
 import bcrypt from 'bcrypt'
 import { Response } from 'supertest'
+import { repositories } from '../../models/repositories'
 import { IUserPost, UserStatus } from '../../utils/interfaces/user'
 import { Table } from '../../utils/types'
 import { useState } from './hooks'
 import { usersRequests } from './requests'
 import { testRequest } from './test-request'
+import { SetStateFunction, State } from './types'
 
 const loginRoute = '/api/public/auth/login'
 
 const [token, setToken] = useState<string>()
 const idsToCleanupAfterAll: {
-    [key in Table]: string[]
+    [key in Table]: number[]
 } = {
     users: [],
     resources: [],
@@ -40,15 +42,10 @@ async function _storeUser(email: string, status?: UserStatus) {
         active: true
     }
 
-    await dbService.query({
-        collection: 'users',
-        obj: user,
-        action: 'add'
-    })
+    await repositories.users.save(user)
 }
 
 async function _loginUser(email: string, password: string) {
-    // Login
     await testRequest(
         {
             method: 'POST',

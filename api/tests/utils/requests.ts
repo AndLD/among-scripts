@@ -1,3 +1,4 @@
+import { Response } from 'supertest'
 import { testRequest } from './test-request'
 
 export const usersRequests = {
@@ -13,8 +14,8 @@ export const usersRequests = {
         result: expect.any(String)
     },
 
-    // User registration
-    defaultPost: function (callback?: (res: any) => void, options?: any) {
+    // User Sign Up
+    defaultPost: function (callback?: (res: Response) => void, options?: any) {
         return testRequest(
             {
                 method: 'POST',

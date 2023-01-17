@@ -18,5 +18,7 @@ export function useState<Type>(initialState?: Type, ...subscribers: Subscriber[]
 }
 
 export function useEffect(subscriber: Subscriber, states: any[]) {
-    for (const state of states) state.subscribers.push(subscriber)
+    for (const state of states) {
+        state.subscribers.push(subscriber)
+    }
 }

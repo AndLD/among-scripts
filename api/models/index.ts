@@ -9,14 +9,18 @@ import { User } from './entities/User'
 
 const port = process.env.POSTGRES_PORT
 
-export const dataSource = new DataSource({
-    type: 'postgres',
-    host: process.env.POSTGRES_HOST || 'localhost',
-    port: port ? parseInt(port) : 5432,
-    username: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    database: process.env.POSTGRES_DB,
-    logging: true,
-    namingStrategy: new SnakeNamingStrategy(),
-    entities: [User, Point, Resource, Base, Bot, Command]
-})
+export const dataSource = createDataSource()
+
+export function createDataSource() {
+    return new DataSource({
+        type: 'postgres',
+        host: process.env.POSTGRES_HOST || 'localhost',
+        port: port ? parseInt(port) : 5432,
+        username: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        database: process.env.POSTGRES_DB,
+        logging: true,
+        namingStrategy: new SnakeNamingStrategy(),
+        entities: [User, Point, Resource, Base, Bot, Command]
+    })
+}

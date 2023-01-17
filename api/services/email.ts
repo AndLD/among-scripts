@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer'
-import { app } from '..'
+import { app } from '../app'
 import { FRONTEND_URL } from '../utils/constants'
 
 let transporter: nodemailer.Transporter<any> | undefined
