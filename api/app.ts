@@ -3,7 +3,7 @@ import fastifyCors from '@fastify/cors'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyMiddie from '@fastify/middie'
 import fastifyRequestContext from '@fastify/request-context'
-import { FastifyInstance } from 'fastify'
+import fastify from 'fastify'
 import fastifyIo from 'fastify-socket.io'
 import 'reflect-metadata'
 import { isSocketAllowed } from './middlewares/auth'
@@ -12,7 +12,11 @@ import { apiRouters } from './routers'
 import { emailService } from './services/email'
 import { FRONTEND_URL } from './utils/constants'
 
-export async function setupApp(app: FastifyInstance) {
+export async function startApp() {
+    const app = fastify({
+        logger: true
+    })
+
     app.register(fastifyHelmet)
 
     const whitelist = process.env.WHITELIST_URLS
@@ -45,7 +49,7 @@ export async function setupApp(app: FastifyInstance) {
 
     app.get('/', (req, reply) => {
         setTimeout(() => app.io.emit('hello'), 2000)
-        reply.status(200).send()
+        reply.send()
     })
 
     app.setErrorHandler(function (error, request, reply) {
