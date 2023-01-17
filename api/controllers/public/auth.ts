@@ -54,11 +54,14 @@ async function postLogin(req: FastifyRequest<{ Body: IAuthPostBody }>, reply: Fa
 }
 
 async function postRefresh(req: FastifyRequest, reply: FastifyReply) {
+    console.log('START 0')
     const refreshToken = req.cookies.refresh_token
 
     if (!refreshToken) {
         throw errors.UNABLE_TO_REFRESH_ACCESS_JWT
     }
+
+    console.log('START 1')
 
     // TODO: Investigate cases when jwt.verify can return a string ?
     try {
@@ -70,11 +73,15 @@ async function postRefresh(req: FastifyRequest, reply: FastifyReply) {
         throw new Error('decodeValue.user is empty!')
     }
 
+    console.log('START 2')
+
     const userId = decodeValue.user.id
 
     const user = await userRepository.findOneBy({
         id: userId
     })
+
+    console.log('START 3', userId, user)
 
     if (!user) {
         throw errors.UNAUTHORIZED
@@ -93,6 +100,7 @@ async function postRefresh(req: FastifyRequest, reply: FastifyReply) {
     const tokens = createJwt(userState)
 
     reply.cookie('refresh_token', tokens.refreshToken, { httpOnly: true })
+    console.log('START 4')
     reply.send({
         result: tokens.accessToken
     })

@@ -3,7 +3,7 @@ import fastifyCors from '@fastify/cors'
 import fastifyHelmet from '@fastify/helmet'
 import fastifyMiddie from '@fastify/middie'
 import fastifyRequestContext from '@fastify/request-context'
-import fastify, { FastifyInstance } from 'fastify'
+import { FastifyInstance } from 'fastify'
 import fastifyIo from 'fastify-socket.io'
 import 'reflect-metadata'
 import { isSocketAllowed } from './middlewares/auth'
@@ -49,12 +49,8 @@ export async function setupApp(app: FastifyInstance) {
     })
 
     app.setErrorHandler(function (error, request, reply) {
-        if (error instanceof fastify.errorCodes.FST_ERR_BAD_STATUS_CODE) {
-            this.log.error(error)
-            reply.status(parseInt(error.code)).send({ msg: error.message, code: error.code })
-        } else {
-            reply.send(error)
-        }
+        this.log.error(error)
+        reply.status(parseInt(error.code)).send({ msg: error.message, code: error.code })
     })
 
     await app.ready()

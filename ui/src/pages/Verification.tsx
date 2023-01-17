@@ -1,5 +1,5 @@
 import { LoadingOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Navigate, useSearchParams } from 'react-router-dom'
 import { useToken } from '../hooks/auth'
 import { useRefreshToken } from '../hooks/store/auth.api'
@@ -15,13 +15,16 @@ export default function Verification() {
     const token = useToken()
     const refreshToken = useRefreshToken(() => setIsLoading(false))
 
-    useVerifyEmail(emailVerificationToken, () => {
+    const verifyEmailCallback = useCallback(() => {
         if (token) {
+            alert('I am going to refresh token.')
             refreshToken()
         } else {
             setIsLoading(false)
         }
-    })
+    }, [token])
+
+    useVerifyEmail(emailVerificationToken, verifyEmailCallback)
 
     return (
         <div className="verification-container">

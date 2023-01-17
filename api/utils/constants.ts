@@ -45,3 +45,5 @@ export enum entities {
     BASES = 'bases',
     BOTS = 'bots'
 }
+
+export const INITIAL_BASE_STORAGE = 300

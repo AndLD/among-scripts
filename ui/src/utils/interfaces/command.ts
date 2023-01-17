@@ -3,8 +3,8 @@ export interface ICommand {
     userId: number
     type: CommandType
     status: CommandStatus
-    timestamp: number
-    lastUpdateTimestamp: number
+    timestamp: string
+    lastUpdateTimestamp?: string
 }
 
 export enum BaseCommands {
@@ -21,7 +21,7 @@ export enum BotCommands {
 export type CommandType = BaseCommands | BotCommands
 
 export enum CommandStatus {
-    CREATED,
-    IN_PROCESS,
-    COMPLETED
+    CREATED = 'created',
+    IN_PROCESS = 'in_process',
+    COMPLETED = 'completed'
 }
